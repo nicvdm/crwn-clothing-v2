@@ -5,6 +5,7 @@ import {
   signInWithPopup,
   GoogleAuthProvider,
   createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
 } from "firebase/auth";
 import { getFirestore, doc, getDoc, setDoc } from "firebase/firestore";
 // TODO: Add SDKs for Firebase products that you want to use
@@ -33,6 +34,11 @@ export const auth = getAuth();
 export const signInWithGooglePopup = () =>
   signInWithPopup(auth, googleProvider);
 
+export const signInWithAuthEmailAndPassword = async (email, password) => {
+  if (!email || !password) return;
+  return await signInWithEmailAndPassword(auth, email, password);
+};
+
 export const db = getFirestore();
 
 export const createUserDocumentFromAuth = async (
@@ -42,12 +48,7 @@ export const createUserDocumentFromAuth = async (
   if (!userAuth) return;
   const userDocRef = doc(db, "users", userAuth.uid);
 
-  console.log(userDocRef);
-
   const userSnapshot = await getDoc(userDocRef);
-
-  console.log(userSnapshot);
-  console.log(userSnapshot.exists());
 
   //if user does not exist
   //create / set the document with the data from userAuth in my collection
